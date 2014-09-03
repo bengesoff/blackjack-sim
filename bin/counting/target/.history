@@ -1,0 +1,4 @@
+Game.class
+help
+scala -cp Game
+exit
