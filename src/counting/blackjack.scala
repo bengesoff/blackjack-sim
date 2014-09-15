@@ -139,14 +139,22 @@ class Player() {
   var bettedMoney = 0.0
   var hand = new Hand()
   def insurance() = {} // work this out
-  def placeBet() = {bettedMoney += 1.0; moneyBalance -= 1.0} // constant bet
+  def placeBet() = {bettedMoney += 25.0; moneyBalance -= 25.0} // constant bet
   def makeDecision(): Decision = {Hit} // execute Basic Strategy
 }
 
-class CountingPlayer() extends Player {
+class CountingPlayer(val betSpread: Double, val minimumBet: Double = 25.0) extends Player {
   var runningCount = 0
   var trueCount = 0.0
-  override def placeBet() = {}// pattern match with count thresholds|work out based on count: Kelly Criterion
+  override def placeBet() = {
+    val bet = trueCount match {
+      case count if count < 0 => minimumBet
+      case count if count >= 10 => minimumBet * betSpread
+      case count => ((minimumBet * (betSpread - 1)) * (count / 10)) + minimumBet
+    }
+    bettedMoney += bet
+    moneyBalance -= bet
+  }// pattern match with count thresholds|work out based on count: Kelly Criterion
   override def makeDecision(): Decision = {Hit} // modify Basic Strategy based on favourable situations
   def rememberCount(card: Card) = {
     runningCount = card match {
@@ -169,12 +177,19 @@ object Game extends App {
   var shoe = new Deck()
   shoe.shuffle
   val basicPlayers = List[Player](new Player(), new Player(), new Player()) // add the other players
-  val countingPlayer = new CountingPlayer()
+  val countingPlayer = new CountingPlayer(5.0, 25.0)
   basicPlayers.foreach(player => player.placeBet())
   countingPlayer.placeBet
+  println(countingPlayer.bettedMoney)
   val dealer = new Dealer()
   dealer.dealHand()
   // iterate through players, use tail recursion on each one, until decision is Stand, then move to next
   // dealer resolve hand
   countingPlayer.updateCount()
+  countingPlayer.placeBet
+  println(countingPlayer.bettedMoney)
+  dealer.dealHand()
+  countingPlayer.updateCount
+  countingPlayer.placeBet
+  println(countingPlayer.bettedMoney)
 }
