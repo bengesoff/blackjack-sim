@@ -25,51 +25,51 @@ class Deck (var cards: Vector[Card]) {
     // Iterates through the Suits and Values 6 times to produce a shoe of 6 decks {
 	def this() = this(
 	    (for {
-		  s <- Suit.values.toVector; 
+		  s <- Suit.values.toVector;
 		  v <- Rank.values
 		  } yield Card(s, v)) ++
 		  (for {
-		  s <- Suit.values.toVector; 
+		  s <- Suit.values.toVector;
 		  v <- Rank.values
 		  } yield Card(s, v)) ++
 		  (for {
-		  s <- Suit.values.toVector; 
+		  s <- Suit.values.toVector;
 		  v <- Rank.values
 		  } yield Card(s, v)) ++
 		  (for {
-		  s <- Suit.values.toVector; 
+		  s <- Suit.values.toVector;
 		  v <- Rank.values
 		  } yield Card(s, v)) ++
 		  (for {
-		  s <- Suit.values.toVector; 
+		  s <- Suit.values.toVector;
 		  v <- Rank.values
 		  } yield Card(s, v)) ++
 		  (for {
-		  s <- Suit.values.toVector; 
+		  s <- Suit.values.toVector;
 		  v <- Rank.values
 		  } yield Card(s, v)))
 	  // }
 	def shuffle = {cards = Random.shuffle(cards)}
-	
+
 	def deal: Card = {
 	  val card = cards.head
 	  cards = cards.tail
 	  card
 	}
-	
+
 	def length: Int = cards.length
-	
+
 	override def toString: String = this.length + " cards remaining. "
-	
+
 	def printCards = println(cards mkString ", ")
 }
 class Hand () {
   var cards: List[Card] = Nil
-  
+
   def length: Int = cards.length
-  
+
   override def toString: String = "Hand: " + cards.mkString(", ")
-  
+
   def total(canSoft: Boolean = true, holeCard: Option[Card] = None): Int = {
     var total = holeCard match {
       case None => 0
@@ -79,12 +79,12 @@ class Hand () {
     if (total > 21 & canSoft & isSoft) {total = total - 10}
     total
   }
-  
+
   def isSoft = (cards.contains(Card(Diamonds, Ace)) | cards.contains(Card(Hearts, Ace))
         | cards.contains(Card(Spades, Ace)) | cards.contains(Card(Clubs, Ace)))
-  
+
   def addCard = cards = Game.shoe.deal +: cards
-  
+
   def cardValue(card: Card): Int = {
     card match {
         case Card(_, Two) => 2
@@ -122,18 +122,19 @@ class Dealer() {
     Game.countingPlayer.resetCount()
   }
   def resolveHand() = {
-    // simply follow rules
-    // when hold card revealed
+    // FIXME: verify whether works
     def loop() {
       if (hand.total(false, Some(holeCard)) < 17) {
         hand.addCard
         loop()
       }
     }
+    // TODO: handle blackjack and bust
     Game.countingPlayer.rememberCount(holeCard)
   }
 }
-
+// TODO: settle bets
+// must include bust, blackjack and push
 class Player() {
   var moneyBalance = 1000.0
   var bettedMoney = 0.0
@@ -155,7 +156,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -195,7 +196,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -235,7 +236,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -275,7 +276,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => DoubleDown
@@ -315,7 +316,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => DoubleDown
@@ -355,7 +356,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -395,7 +396,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -435,7 +436,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -475,7 +476,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -515,7 +516,7 @@ class Player() {
 	    	    case 20 => Stand
 	    	    case a if a == 16 || (a == 12 && soft) => Split
 	    	  }
-	      } 
+	      }
 	      else if (soft) {
 	        handTotal match {
 	          case 13 => Hit
@@ -543,14 +544,14 @@ class Player() {
 	      }
 	    }
 	  }
-    } // execute Basic Strategy
-  def resolveHand() {}
+    }
+  def resolveHand() {} // TODO: implement the loop to resolve each hand to Stand
 }
 
 class CountingPlayer(val betSpread: Double, val minimumBet: Double = 25.0) extends Player {
   var runningCount = 0
   var trueCount = 0.0
-  override def placeBet() = {
+  override def placeBet() = { // TODO: use Kelly Criterion
     val bet = trueCount match {
       case count if count < 0 => minimumBet
       case count if count >= 10 => minimumBet * betSpread
@@ -558,8 +559,8 @@ class CountingPlayer(val betSpread: Double, val minimumBet: Double = 25.0) exten
     }
     bettedMoney += bet
     moneyBalance -= bet
-  }// pattern match with count thresholds|work out based on count: Kelly Criterion
-  override def resolveHand() = {} // modify Basic Strategy based on favourable situations
+  }
+  override def resolveHand() = {} // TODO: add the indexes to improve PE
   def rememberCount(card: Card) = {
     runningCount = card match {
       case Card(_, Two | Three | Four | Five | Six) => runningCount + 1
@@ -578,6 +579,7 @@ class CountingPlayer(val betSpread: Double, val minimumBet: Double = 25.0) exten
   def resetCount() = runningCount = 0; trueCount = 0
 }
 object Game extends App {
+  // TODO: implement game loop
   var shoe = new Deck()
   shoe.shuffle
   val basicPlayers = List[Player](new Player(), new Player(), new Player()) // add the other players
@@ -587,8 +589,7 @@ object Game extends App {
   println(countingPlayer.bettedMoney)
   val dealer = new Dealer()
   dealer.dealHand()
-  // iterate through players, use tail recursion on each one, until decision is Stand, then move to next
-  // dealer resolve hand
+  // resolve everyone's hand
   countingPlayer.updateCount()
   countingPlayer.placeBet
   println(countingPlayer.bettedMoney)
@@ -596,4 +597,6 @@ object Game extends App {
   countingPlayer.updateCount
   countingPlayer.placeBet
   println(countingPlayer.bettedMoney)
+  // TODO: extract game results to csv for processing
+  // TODO: python process results and write up
 }
