@@ -597,6 +597,7 @@ object Game extends App {
   countingPlayer.updateCount
   countingPlayer.placeBet
   println(countingPlayer.bettedMoney)
+  println("end")
   // TODO: extract game results to csv for processing
   // TODO: python process results and write up
 }
