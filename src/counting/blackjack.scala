@@ -140,7 +140,411 @@ class Player() {
   var hand = new Hand()
   def insurance() = {} // work this out
   def placeBet() = {bettedMoney += 25.0; moneyBalance -= 25.0} // constant bet
-  def makeDecision(): Decision = {Hit} // execute Basic Strategy
+  def basicStrategy(handTotal: Int, dealerUp: Int, pair: Boolean, soft: Boolean): Decision = {
+	  dealerUp match {
+	    case 2 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Split
+	    	    case 6 => Split
+	    	    case 8 => Hit
+	    	    case 10 => DoubleDown
+	    	    case 12 => Split
+	    	    case 14 => Split
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => Hit
+	          case 18 => Stand
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => Hit
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Hit
+	          case 13 => Stand
+	          case 14 => Stand
+	          case 15 => Stand
+	          case 16 => Stand
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 3 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Split
+	    	    case 6 => Split
+	    	    case 8 => Hit
+	    	    case 10 => DoubleDown
+	    	    case 12 => Split
+	    	    case 14 => Split
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => DoubleDown
+	          case 18 => DoubleDown
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => DoubleDown
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Hit
+	          case 13 => Stand
+	          case 14 => Stand
+	          case 15 => Stand
+	          case 16 => Stand
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 4 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Split
+	    	    case 6 => Split
+	    	    case 8 => Hit
+	    	    case 10 => DoubleDown
+	    	    case 12 => Split
+	    	    case 14 => Split
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => DoubleDown
+	          case 16 => DoubleDown
+	          case 17 => DoubleDown
+	          case 18 => DoubleDown
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => DoubleDown
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Stand
+	          case 13 => Stand
+	          case 14 => Stand
+	          case 15 => Stand
+	          case 16 => Stand
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 5 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Split
+	    	    case 6 => Split
+	    	    case 8 => Split
+	    	    case 10 => DoubleDown
+	    	    case 12 => Split
+	    	    case 14 => Split
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => DoubleDown
+	          case 14 => DoubleDown
+	          case 15 => DoubleDown
+	          case 16 => DoubleDown
+	          case 17 => DoubleDown
+	          case 18 => DoubleDown
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => DoubleDown
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Stand
+	          case 13 => Stand
+	          case 14 => Stand
+	          case 15 => Stand
+	          case 16 => Stand
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 6 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Split
+	    	    case 6 => Split
+	    	    case 8 => Split
+	    	    case 10 => DoubleDown
+	    	    case 12 => Split
+	    	    case 14 => Split
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => DoubleDown
+	          case 14 => DoubleDown
+	          case 15 => DoubleDown
+	          case 16 => DoubleDown
+	          case 17 => DoubleDown
+	          case 18 => DoubleDown
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => DoubleDown
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Stand
+	          case 13 => Stand
+	          case 14 => Stand
+	          case 15 => Stand
+	          case 16 => Stand
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 7 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Split
+	    	    case 6 => Split
+	    	    case 8 => Hit
+	    	    case 10 => DoubleDown
+	    	    case 12 => Hit
+	    	    case 14 => Split
+	    	    case 18 => Stand
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => Hit
+	          case 18 => Stand
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => Hit
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Hit
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 8 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Hit
+	    	    case 6 => Hit
+	    	    case 8 => Hit
+	    	    case 10 => DoubleDown
+	    	    case 12 => Hit
+	    	    case 14 => Hit
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => Hit
+	          case 18 => Split
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => Hit
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Hit
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 9 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Hit
+	    	    case 6 => Hit
+	    	    case 8 => Hit
+	    	    case 10 => DoubleDown
+	    	    case 12 => Hit
+	    	    case 14 => Hit
+	    	    case 18 => Split
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => Hit
+	          case 18 => Hit
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => Hit
+	          case 10 => DoubleDown
+	          case 11 => DoubleDown
+	          case 12 => Hit
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 10 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Hit
+	    	    case 6 => Hit
+	    	    case 8 => Hit
+	    	    case 10 => Hit
+	    	    case 12 => Hit
+	    	    case 14 => Hit
+	    	    case 18 => Stand
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => Hit
+	          case 18 => Hit
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => Hit
+	          case 10 => Hit
+	          case 11 => DoubleDown
+	          case 12 => Hit
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	    case 11 => {
+	      if (pair){
+	    	  handTotal match {
+	    	    case 4 => Hit
+	    	    case 6 => Hit
+	    	    case 8 => Hit
+	    	    case 10 => Hit
+	    	    case 12 => Hit
+	    	    case 14 => Hit
+	    	    case 18 => Stand
+	    	    case 20 => Stand
+	    	    case a if a == 16 || (a == 12 && soft) => Split
+	    	  }
+	      } 
+	      else if (soft) {
+	        handTotal match {
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case 17 => Hit
+	          case 18 => Hit
+	          case a if a >= 19 => Stand
+	        }
+	      }
+	      else {
+	        handTotal match {
+	          case a if a <= 8 => Hit
+	          case 9 => Hit
+	          case 10 => Hit
+	          case 11 => Hit
+	          case 12 => Hit
+	          case 13 => Hit
+	          case 14 => Hit
+	          case 15 => Hit
+	          case 16 => Hit
+	          case b if b >= 17 => Stand
+	        }
+	      }
+	    }
+	  }
+    } // execute Basic Strategy
+  def resolveHand() {}
 }
 
 class CountingPlayer(val betSpread: Double, val minimumBet: Double = 25.0) extends Player {
@@ -155,7 +559,7 @@ class CountingPlayer(val betSpread: Double, val minimumBet: Double = 25.0) exten
     bettedMoney += bet
     moneyBalance -= bet
   }// pattern match with count thresholds|work out based on count: Kelly Criterion
-  override def makeDecision(): Decision = {Hit} // modify Basic Strategy based on favourable situations
+  override def resolveHand() = {} // modify Basic Strategy based on favourable situations
   def rememberCount(card: Card) = {
     runningCount = card match {
       case Card(_, Two | Three | Four | Five | Six) => runningCount + 1
