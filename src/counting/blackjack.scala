@@ -21,33 +21,33 @@ case class Card(suit: Suit, value: Rank) {
   override def toString(): String = (value + " of " + suit)
 }
 
-class Deck (var cards: Vector[Card]) {
+class Deck (var cards: List[Card]) {
   // Iterates through the Suits and Values 6 times to produce a shoe of 6 decks {
   def this() = this(
     (for {
       // FIXME: vector conversion from Suit enumeration
       // maybe consider importing the method above
-      s <- (Suit.values).toVector();
+      s <- Suit.values.toList;
       v <- Rank.values
     } yield Card(s, v)) ++
     (for {
-      s <- Suit.values;
+      s <- Suit.values.toList;
       v <- Rank.values
     } yield Card(s, v)) ++
     (for {
-      s <- Suit.values;
+      s <- Suit.values.toList;
       v <- Rank.values
     } yield Card(s, v)) ++
     (for {
-      s <- Suit.values;
+      s <- Suit.values.toList;
       v <- Rank.values
     } yield Card(s, v)) ++
     (for {
-      s <- Suit.values;
+      s <- Suit.values.toList;
       v <- Rank.values
     } yield Card(s, v)) ++
     (for {
-      s <- Suit.values;
+      s <- Suit.values.toList;
       v <- Rank.values
     } yield Card(s, v)))
     // }
@@ -444,6 +444,7 @@ class Deck (var cards: Vector[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -559,7 +560,13 @@ class Deck (var cards: Vector[Card]) {
           println("Hit: " + hand.toString)
           resolveHand()
         }
-        case DoubleDown => // TODO: add double and split logic
+        case DoubleDown => {
+          moneyBalance -= bettedMoney
+          bettedMoney *= 2
+          hand.addCard
+          println("Double: " + hand.toString)// TODO: add split logic
+        }
+        case Split => println("Split")
       }
     }
   }
@@ -593,37 +600,47 @@ class Deck (var cards: Vector[Card]) {
       Game.basicPlayers.foreach(player => player.hand.cards.foreach(card => rememberCount(card)))
       hand.cards.foreach(card => rememberCount(card))
       trueCount = (runningCount / (Game.shoe.length / 52.0))
-      println(runningCount.toString + " " + trueCount.toString + " " + Game.shoe.length)
     }
     def resetCount() = runningCount = 0; trueCount = 0
   }
+
   object Game extends App {
+    def playHand = {
+      println("start hand")
+      println(shoe)
+      Game.dealer.dealHand()
+      println(shoe)
+      println(Game.dealer.hand.cards.head)
+      Game.countingPlayer.updateCount()
+      println("True Count: " + Game.countingPlayer.trueCount.toString)
+      Game.countingPlayer.placeBet
+      println("Betted: " + Game.countingPlayer.bettedMoney)
+      Game.basicPlayers.foreach(player => {
+        println("player resolve")
+        player.resolveHand()
+        println("Hand total: " + player.hand.total(true, None).toString)})
+      Game.countingPlayer.updateCount()
+      println("True Count: " + Game.countingPlayer.trueCount.toString)
+      // resolve counting player hand
+      // dish out bets etc
+      Game.basicPlayers.foreach(player => player.hand = new Hand())
+      Game.countingPlayer.bettedMoney = 0
+      println("end hand, money balance is: " + countingPlayer.moneyBalance)
+    }
     // TODO: implement game loop
     // maybe loop all number of players in same code
     // only track other players wins and losses for debugging then ignore
     var shoe = new Deck()
-    println(shoe)
     shoe.shuffle
     val basicPlayers = List[Player](new Player(), new Player(), new Player()) // add the other players
     val countingPlayer = new CountingPlayer(5.0, 25.0)
-    basicPlayers.foreach(player => player.placeBet())
-    countingPlayer.placeBet
-    println(countingPlayer.bettedMoney)
     // TODO: encapsulate playing a hand in a function
-    // include checking length of deck, reshuffling, and printing each hand result
     val dealer = new Dealer()
-    dealer.dealHand()
     // resolve everyone's hand
-    basicPlayers.foreach(player => player.resolveHand())
-    countingPlayer.updateCount()
-    countingPlayer.placeBet
-    println(countingPlayer.bettedMoney)
-    dealer.dealHand()
-    basicPlayers.foreach(player => player.resolveHand())
-    countingPlayer.updateCount
-    countingPlayer.placeBet
-    println(countingPlayer.bettedMoney)
-    println("end")
+    // TODO: decide winner and discard cards from players' hand
+    playHand
+    playHand
+    playHand
     // TODO: extract game results to csv for processing
     // header with game details at top, then subheadings for each no of players
     // then each row has hand number and current balance
