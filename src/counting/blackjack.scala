@@ -583,7 +583,28 @@ class Deck (var cards: List[Card]) {
       bettedMoney += bet
       moneyBalance -= bet
     }
-    override def resolveHand() = {} // TODO: add strategy with indexes to improve PE, then check resolution still works
+    override def resolveHand() = {
+      val decision = (hand.total(true, None), Game.dealer.hand.cardValue(Game.dealer.hand.cards.head), hand.isPair, hand.isSoft) match {
+        case () =>
+        case () =>
+        case (total, dealer, pair, soft) => basicStrategy(total, dealer, pair, soft)
+      }
+      decision match {
+        case Stand => println("Stand")
+        case Hit => {
+          hand.addCard
+          println("Hit: " + hand.toString)
+          resolveHand()
+        }
+        case DoubleDown => {
+          moneyBalance -= bettedMoney
+          bettedMoney *= 2
+          hand.addCard
+          println("Double: " + hand.toString)// TODO: add split logic
+        }
+        case Split => println("Split")
+      }
+    } // TODO: add strategy with indexes to improve PE, then check resolution still works
     // maybe have an index function that calls basic strategy or returns alternative
     // basic strategy already defined in inheritance so no performance gain separating
     // decide how many indexes
