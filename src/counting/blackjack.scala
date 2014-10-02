@@ -164,6 +164,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -204,6 +205,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -244,6 +246,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => DoubleDown
@@ -284,6 +287,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => DoubleDown
               case 13 => DoubleDown
               case 14 => DoubleDown
               case 15 => DoubleDown
@@ -324,6 +328,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => DoubleDown
               case 13 => DoubleDown
               case 14 => DoubleDown
               case 15 => DoubleDown
@@ -364,6 +369,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -404,6 +410,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -485,6 +492,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -525,6 +533,7 @@ class Deck (var cards: List[Card]) {
           }
           else if (soft) {
             handTotal match {
+              case 12 => Hit
               case 13 => Hit
               case 14 => Hit
               case 15 => Hit
@@ -583,28 +592,7 @@ class Deck (var cards: List[Card]) {
       bettedMoney += bet
       moneyBalance -= bet
     }
-    override def resolveHand() = {
-      val decision = (hand.total(true, None), Game.dealer.hand.cardValue(Game.dealer.hand.cards.head), hand.isPair, hand.isSoft) match {
-        case () =>
-        case () =>
-        case (total, dealer, pair, soft) => basicStrategy(total, dealer, pair, soft)
-      }
-      decision match {
-        case Stand => println("Stand")
-        case Hit => {
-          hand.addCard
-          println("Hit: " + hand.toString)
-          resolveHand()
-        }
-        case DoubleDown => {
-          moneyBalance -= bettedMoney
-          bettedMoney *= 2
-          hand.addCard
-          println("Double: " + hand.toString)// TODO: add split logic
-        }
-        case Split => println("Split")
-      }
-    } // TODO: add strategy with indexes to improve PE, then check resolution still works
+    override def resolveHand() = {} // TODO: add strategy with indexes to improve PE, then check resolution still works
     // maybe have an index function that calls basic strategy or returns alternative
     // basic strategy already defined in inheritance so no performance gain separating
     // decide how many indexes
@@ -627,6 +615,7 @@ class Deck (var cards: List[Card]) {
 
   object Game extends App {
     def playHand = {
+      // TODO: Decide winning and losing and ignore basicPlayers
       println("start hand")
       println(shoe)
       Game.dealer.dealHand()
@@ -644,21 +633,24 @@ class Deck (var cards: List[Card]) {
       println("True Count: " + Game.countingPlayer.trueCount.toString)
       // resolve counting player hand
       // dish out bets etc
+      if (wins(Game.countingPlayer)) {
+        Game.countingPlayer.moneyBalance += (Game.countingPlayer.bettedMoney * 2)
+        println("Player wins " + Game.countingPlayer.bettedMoney)
+      }
       Game.basicPlayers.foreach(player => player.hand = new Hand())
       Game.countingPlayer.bettedMoney = 0
       println("end hand, money balance is: " + countingPlayer.moneyBalance)
     }
-    // TODO: implement game loop
-    // maybe loop all number of players in same code
-    // only track other players wins and losses for debugging then ignore
+    def wins(player: Player): Boolean = {
+      val dHand = Game.dealer.hand.total(true, None)
+      val pHand = player.hand.total(true, None)
+      (dHand < pHand & pHand <= 21) | (pHand <= 21 & dHand > 21)
+    }
     var shoe = new Deck()
     shoe.shuffle
     val basicPlayers = List[Player](new Player(), new Player(), new Player()) // add the other players
     val countingPlayer = new CountingPlayer(5.0, 25.0)
-    // TODO: encapsulate playing a hand in a function
     val dealer = new Dealer()
-    // resolve everyone's hand
-    // TODO: decide winner and discard cards from players' hand
     playHand
     playHand
     playHand
@@ -667,6 +659,3 @@ class Deck (var cards: List[Card]) {
     // then each row has hand number and current balance
     // TODO: python process results and write up
   }
-  // TODO: add loads of println statements for debugging.
-  // when count is updated, when bet placed, when cards exchanged anywhere, when
-  // hand resolved
